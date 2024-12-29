@@ -41,9 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  
     'products',
+    'accounts',
     'django_filters',
+    'rest_framework.authtoken',
    
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -148,4 +152,11 @@ MEDIA_URL = '/media/'  # رابط الوصول للملفات
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # مكان تخزين الملفات على السيرفر
 
 
+# AUTH_USER_MODEL = 'accounts.CustomUser'
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}

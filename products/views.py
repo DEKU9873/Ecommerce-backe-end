@@ -7,6 +7,9 @@ from rest_framework import status
 from django.db import IntegrityError
 from .pagination import CustomPagination
 from .filters import ProductFilter
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 # عرض واضافة وحذف المنتجات
 @api_view(['GET', 'POST', 'DELETE'])
@@ -100,6 +103,7 @@ def brand_detail_view(request, pk):
 
 # عرض واضافة وحذف التصنيفات
 @api_view(['GET', 'POST', 'DELETE'])
+# @permission_classes([IsAuthenticated])
 def categories_view(request):
     if request.method == 'GET':
         categories = Category.objects.all()
