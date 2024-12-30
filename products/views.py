@@ -10,6 +10,8 @@ from .filters import ProductFilter
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
+from .permissions import IsAdminOrReadOnly
+
 
 # عرض واضافة وحذف المنتجات
 @api_view(['GET', 'POST', 'DELETE'])
@@ -104,6 +106,7 @@ def brand_detail_view(request, pk):
 # عرض واضافة وحذف التصنيفات
 @api_view(['GET', 'POST', 'DELETE'])
 # @permission_classes([IsAuthenticated])
+@permission_classes([IsAdminOrReadOnly])
 def categories_view(request):
     if request.method == 'GET':
         categories = Category.objects.all()
