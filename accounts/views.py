@@ -52,7 +52,7 @@ def get_all_users(request):
                 'email': user.email,
                 'phoneNumber': profile.phoneNumber,
                 'role': profile.role,
-                'permissions': profile.permissions,  # الصلاحيات
+                'permissions': profile.permissions,  # إرجاع القائمة كما هي
             }
             data.append(user_data)
         except Profile.DoesNotExist:
@@ -62,11 +62,12 @@ def get_all_users(request):
                 'email': user.email,
                 'phoneNumber': None,
                 'role': None,
-                'permissions': [],  # صلاحيات فارغة
+                'permissions': [],  # قائمة فارغة في حال عدم وجود ملف شخصي
             }
             data.append(user_data)
 
     return Response({'users': data})
+
 
 
 @api_view(['PUT'])
@@ -83,6 +84,9 @@ def change_user_role(request, user_id):
     role = request.data.get('role', user.profile.role)
     permissions = request.data.get('permissions', user.profile.permissions)
 
+    if isinstance(permissions, str):
+        permissions = [perm.strip() for perm in permissions.split(',')]  # تحويل النص إلى قائمة
+
     user.username = username
     user.email = email
     user.save()
@@ -90,7 +94,7 @@ def change_user_role(request, user_id):
     profile = user.profile
     profile.phoneNumber = phone_number
     profile.role = role
-    profile.permissions = permissions  # تحديث الصلاحيات
+    profile.permissions = permissions  # تحديث الصلاحيات كقائمة
     profile.save()
 
     if role == 'Admin':
@@ -106,7 +110,6 @@ def change_user_role(request, user_id):
         'phoneNumber': profile.phoneNumber,
         'role': profile.role,
         'permissions': profile.permissions,
-        'is_staff': user.is_staff,
     }
 
     return Response({

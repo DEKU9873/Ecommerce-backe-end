@@ -6,7 +6,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     phoneNumber = serializers.CharField(max_length=15, required=True)
     role = serializers.CharField(max_length=50, required=False, default='User')
-    permissions = serializers.JSONField(required=False, default=list)  # الصلاحيات
+    permissions = serializers.ListField(
+        child=serializers.CharField(max_length=50),
+        required=False,
+        default=list,
+    )
 
     class Meta:
         model = User
