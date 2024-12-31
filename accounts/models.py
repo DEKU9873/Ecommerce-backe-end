@@ -13,7 +13,8 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phoneNumber = models.CharField(max_length=15)
-    role = models.CharField(max_length=50, default='User')  # إضافة حقل role
+    role = models.CharField(max_length=50, default='User')  # دور المستخدم
+    permissions = models.JSONField(default=list, blank=True)  # قائمة بالصلاحيات المخصصة
 
     def __str__(self):
         return self.user.username

@@ -10,7 +10,7 @@ from .filters import ProductFilter
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsBrandAdminOrHasPermission
 
 
 # عرض واضافة وحذف المنتجات
@@ -62,6 +62,7 @@ def product_detail_view(request, pk):
 
 # عرض واضافة وحذف الماركات
 @api_view(['GET', 'POST', 'DELETE'])
+@permission_classes([IsBrandAdminOrHasPermission])
 def brands_view(request):
     if request.method == 'GET':
         brands = Brand.objects.all()
@@ -106,7 +107,7 @@ def brand_detail_view(request, pk):
 # عرض واضافة وحذف التصنيفات
 @api_view(['GET', 'POST', 'DELETE'])
 # @permission_classes([IsAuthenticated])
-@permission_classes([IsAdminOrReadOnly])
+# @permission_classes([IsAdminOrReadOnly])
 def categories_view(request):
     if request.method == 'GET':
         categories = Category.objects.all()

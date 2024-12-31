@@ -1,5 +1,4 @@
 from django.urls import path
-# from .views import ProductImageUploadView
 
 from . import views
 
@@ -13,9 +12,5 @@ urlpatterns = [
     path('subcategories/', views.subcategories_view, name='subcategories'),
     path('subcategories/<int:pk>/', views.subcategory_detail_view, name='subcategory_detail'),
     path('category/<int:pk>/subcategories/', views.category_subcategories_view, name='category_subcategories'),
-
-    # path('products/<int:product_id>/upload-images/', ProductImageUploadView.as_view(), name='product-upload-images'),
-
-
 
 ]

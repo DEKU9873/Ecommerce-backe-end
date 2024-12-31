@@ -5,18 +5,20 @@ from .models import Profile
 class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     phoneNumber = serializers.CharField(max_length=15, required=True)
-    role = serializers.CharField(max_length=50, required=False, default='User')  # إضافة حقل role
+    role = serializers.CharField(max_length=50, required=False, default='User')
+    permissions = serializers.JSONField(required=False, default=list)  # الصلاحيات
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'password2', 'phoneNumber', 'role')
+        fields = ('id', 'username', 'email', 'password', 'password2', 'phoneNumber', 'role', 'permissions')
         extra_kwargs = {'password': {'write_only': True}}
 
     def save(self):
         password = self.validated_data['password']
         password2 = self.validated_data['password2']
         phone_number = self.validated_data['phoneNumber']
-        role = self.validated_data.get('role', 'User')  # الحصول على role (افتراضي 'User')
+        role = self.validated_data.get('role', 'User')
+        permissions = self.validated_data.get('permissions', [])
 
         if password != password2:
             raise serializers.ValidationError({'error': 'Passwords do not match'})
@@ -27,6 +29,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         account.set_password(password)
         account.save()
 
-        profile = Profile.objects.create(user=account, phoneNumber=phone_number, role=role)  # تعيين الدور هنا
+        profile = Profile.objects.create(
+            user=account,
+            phoneNumber=phone_number,
+            role=role,
+            permissions=permissions
+        )
 
         return account
